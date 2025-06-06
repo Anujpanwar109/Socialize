@@ -1,0 +1,147 @@
+import React,{useState,useEffect} from "react";
+import { useParams,useNavigate } from "react-router-dom";
+import Navbar from "../components/layout/Navbar";
+import { useAuth } from '../context/AuthContext'
+import { userApi, postApi } from '../services/api'
+
+function ProfilePage(){
+
+    const {userId}=useParams()
+    const{user}=useAuth()
+    const navigate=useNavigate()
+
+    const [profile, setProfile] = useState(null)
+    const [posts, setPosts] = useState([])
+    const [isEditing, setIsEditing] = useState(false)
+    const [editName, setEditName] = useState('') 
+    const [loading, setLoading] = useState(true)
+
+
+    const targetUserId = userId || user?.id
+    const isOwnProfile = !userId || userId === user?.id
+
+    console.log("userId param:", userId);
+console.log("user from context:", user);
+console.log("targetUserId to fetch:", targetUserId);
+
+    useEffect(()=>{
+        if(!user ){
+            navigate('/login')
+            return
+        }
+        const fetchProfile=async()=>{
+            try{
+                const profileResponse=await userApi.getUserProfile(targetUserId)
+                console.log("abc",profileResponse)
+                setProfile(profileResponse.data)
+                console.log(profileResponse)
+                setEditName(profileResponse.data.name)
+
+                const postsResponse=await postApi.getMyPosts()
+                console.log("cde",postsResponse)
+                setPosts(postsResponse.data.data)
+            }
+            catch (error){
+                console.error('Error fetching profile:',error)
+            }
+            finally{
+                setLoading(false)
+            }
+        }
+
+        fetchProfile()
+    },[targetUserId,user,navigate])
+
+    const handleEditProfile=async()=>{
+        try{
+            const response=await userApi.updateProfile({name:editName})
+            console.log(response)
+            setProfile(response.data)
+            setIsEditing(false)
+        }
+        catch(error){
+            console.error('Error updating profile:',error)
+        }
+    }
+    if (loading) {
+    return <div className="text-center mt-20">Loading...</div>
+    }
+
+    if (!profile) {
+    return <div className="text-center mt-20">Profile not found</div>
+    }
+    return(
+        
+
+    <div>
+      <Navbar />
+      <div className="profile-container">
+        {/* Profile Header */}
+        <div className="profile-header">
+          <div className="profile-avatar">
+            {profile.name?.[0] || 'U'}
+          </div>
+
+          <div className="profile-details">
+            <div className="profile-name-section">
+              {isEditing ? (
+                <div className="edit-controls">
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    className="edit-name-input"
+                  />
+                  <button onClick={handleEditProfile} className="save-button">Save</button>
+                  <button onClick={() => setIsEditing(false)} className="cancel-button">Cancel</button>
+                </div>
+              ) : (
+                <>
+                  <h2 className="profile-name">{profile.name}</h2>
+                  {isOwnProfile && (
+                    <button onClick={() => setIsEditing(true)} className="edit-profile-button">Edit Profile</button>
+                  )}
+                </>
+              )}
+            </div>
+
+            <div className="profile-stats">
+              <span><strong>{posts.length}</strong> posts</span>
+              <span><strong>0</strong> followers</span>
+              <span><strong>0</strong> following</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Posts Grid */}
+        <div className="posts-grid">
+          {posts && posts.length>0 && posts.map(post => (
+            <div key={post._id} className="post-tile">
+              {post.image ? (
+                <div>
+                <img src={post.image} alt="img" className="post-image" />
+                <div className="text-only-tile">
+                  <span className="text-only-message">{post.text}</span>
+                </div>
+                </div>
+                
+              ) : (
+                <div className="text-only-tile">
+                  <span className="text-only-message">{post.text}</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {posts.length === 0 && (
+          <div className="no-posts-message">No posts yet</div>
+        )}
+      </div>
+    </div>
+  
+
+
+    )
+}
+export default ProfilePage
