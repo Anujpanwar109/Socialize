@@ -32,13 +32,13 @@ console.log("targetUserId to fetch:", targetUserId);
         const fetchProfile=async()=>{
             try{
                 const profileResponse=await userApi.getUserProfile(targetUserId)
-                console.log("abc",profileResponse)
-                setProfile(profileResponse.data)
                 console.log(profileResponse)
+                setProfile(profileResponse.data.data)
+                
                 setEditName(profileResponse.data.name)
 
                 const postsResponse=await postApi.getMyPosts()
-                console.log("cde",postsResponse)
+                
                 setPosts(postsResponse.data.data)
             }
             catch (error){
@@ -52,10 +52,28 @@ console.log("targetUserId to fetch:", targetUserId);
         fetchProfile()
     },[targetUserId,user,navigate])
 
+const handleDelete = async (postId) => {
+  try {
+    const response = await userApi.deletePost(postId); 
+
+    if (response.status === 200 || response.status === 204) {
+      
+      setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+      alert("Post deleted successfully");
+
+    } else {
+      console.error("Delete failed:", response);
+    }
+  } catch (error) {
+    console.error("Error while deleting post:", error);
+  }
+};
+
+
     const handleEditProfile=async()=>{
         try{
             const response=await userApi.updateProfile({name:editName})
-            console.log(response)
+            
             setProfile(response.data)
             setIsEditing(false)
         }
@@ -117,10 +135,12 @@ console.log("targetUserId to fetch:", targetUserId);
         <div className="posts-grid">
           {posts && posts.length>0 && posts.map(post => (
             <div key={post._id} className="post-tile">
+            <button onClick={()=>handleDelete(post._id)}>❌</button>
               {post.image ? (
-                <div>
+                <div className="image-text-tile">
+                
                 <img src={post.image} alt="img" className="post-image" />
-                <div className="text-only-tile">
+                <div>
                   <span className="text-only-message">{post.text}</span>
                 </div>
                 </div>
@@ -130,6 +150,7 @@ console.log("targetUserId to fetch:", targetUserId);
                   <span className="text-only-message">{post.text}</span>
                 </div>
               )}
+              
             </div>
           ))}
         </div>

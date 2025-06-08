@@ -23,13 +23,15 @@ export const AuthProvider=({children})=>{
  const signup=async(name,email,password) => {
     try{
         const response=await authApi.signup({name,email,password})
-              let user = {
-            id: response.data.data._id,
-            name: response.data.data.name, 
-            email:  response.data.data.email,
+        //       let user = {
+        //     id: response.data.data._id,
+        //     name: response.data.data.name, 
+        //     email:  response.data.data.email,
 
-        }
-        let token =  response.data.data.token
+        // }
+        // let token =  response.data.data.token
+
+        const {user,token}=response.data
         localStorage.setItem('token', token)
         localStorage.setItem('user', JSON.stringify(user))
 

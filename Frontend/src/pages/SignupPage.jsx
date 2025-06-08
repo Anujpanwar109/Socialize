@@ -31,7 +31,7 @@ const SignupPage = () => {
     <Creative/>
 
         <div className='login-box'>
-        <h1>Social Media</h1>
+        <h1>Socialize</h1>
         <p className="subtitlee">Sign up to see photos and videos from your friends.</p>
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
             <form onSubmit={handleSubmit}>

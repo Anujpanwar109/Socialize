@@ -56,6 +56,7 @@ export const commentApi={
 export const userApi = {
   getUserProfile: (userId) => api.get(`/user/profile/${userId}`),
   updateProfile: (profileData) => api.put('/user/profile', profileData),
+  deletePost:(postId)=>api.delete(`/post/delete/${postId}`)
 }
 
 export default api;

@@ -36,7 +36,7 @@ const LoginPage = () => {
       <Creative/>
 
         <div className='login-box'>
-            <h1 >Social Media</h1>
+            <h1 >Socialize</h1>
             {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
             <form onSubmit={handleSubmit} >
                 <input

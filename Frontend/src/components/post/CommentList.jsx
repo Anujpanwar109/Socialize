@@ -1,26 +1,23 @@
-import{useState,useEffect} from 'react'
-import{postApi,commentApi} from '../../services/api'
+import { useState, useEffect } from 'react'
+import { postApi, commentApi } from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
 
-function CommentList({postId}){
+function CommentList({ postId, newComment }) {
+  const [comments, setComments] = useState([])
+  const [loading, setLoading] = useState(true)
+  const { user } = useAuth()
 
-    const[comments,setComments]=useState([])
-    const[loading,setLoading]=useState(true)
+  useEffect(() => {
+    fetchComments()
+  }, [postId])
 
-    const{user}=useAuth()
+  useEffect(() => {
+    if (newComment) {
+      setComments(prev => [newComment, ...prev])
+    }
+  }, [newComment])
 
-    useEffect(()=>{
-        fetchComments()
-    },[postId])
-    //  useEffect(()=>{
-    //     if(newComment){
-    //         setComments([newComment,...comments])
-    //     }
-    //  },[newComment])
-
-     
-
- const fetchComments = async () => {
+  const fetchComments = async () => {
     try {
       const response = await postApi.getPostComments(postId)
       setComments(response.data.data)
@@ -34,11 +31,10 @@ function CommentList({postId}){
   const handleDelete = async (commentId) => {
     try {
       await commentApi.deleteComment(commentId)
-      setComments(comments.filter(comment => comment._id !== commentId))
+      setComments(prev => prev.filter(comment => comment._id !== commentId))
     } catch (error) {
       console.error('Error deleting comment:', error)
     }
-
   }
 
   if (loading) {
@@ -49,26 +45,25 @@ function CommentList({postId}){
     return null
   }
 
-
-    return(
+  return (
     <div className="comment-section">
-        { comments && comments.length>0 && comments.map(comment => (
+      {comments.map(comment => (
         <div key={comment._id} className="comment-row">
-        <p className="comment-text">
-        <span className="comment-user">{comment.user?.name}</span> {comment.text}
-         </p>
-        {comment.user?._id === user?._id && (
-        <button
-          onClick={() => handleDelete(comment._id)}
-          className="comment-delete-button"
-        >
-          Delete
-        </button>
-        )}
+          <p className="comment-text">
+            <span className="comment-user">{comment.user?.name}</span> {comment.text}
+          </p>
+          {comment.user?._id === user?._id && (
+            <button
+              onClick={() => handleDelete(comment._id)}
+              className="comment-delete-button"
+            >
+              Delete
+            </button>
+          )}
         </div>
-         ))}
+      ))}
     </div>
-
-    )
+  )
 }
+
 export default CommentList

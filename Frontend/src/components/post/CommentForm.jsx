@@ -1,61 +1,43 @@
-import React,{useState} from 'react'
+import { useState } from 'react'
 import { commentApi } from '../../services/api'
+import { useAuth } from '../../context/AuthContext'
 
-import { useNavigate } from 'react-router-dom'
+function CommentForm({ postId, onCommentAdded }) {
+  const { user } = useAuth()
+  const [text, setText] = useState('')
+  const [loading, setLoading] = useState(false)
 
-const CommentForm = ({postId,onCommentAdded}) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!text.trim()) return
 
-    const[text,setText]=useState('')
-    const[loading,setLoading]=useState(false)
-
-     const navigate = useNavigate()
-  
-
-    const handleSubmit=async(e)=>{
-        e.preventDefault()
-
-        if(!text.trim()){
-            return
-        }
-        setLoading(true)
-        try{
-            const response=await commentApi.createComment(postId,{text})
-            setText('')
-            console.log("comment", response)
-            // onCommentAdded(response.data)
-            //  navigate("/")
-        }
-        catch(error){
-            console.error('Error adding comment:',error)
-        }
-        finally{
-            setLoading(false)
-        }
-
-       
-
+    setLoading(true)
+    try {
+      const response = await commentApi.createComment(postId, { text })
+      const newComment = response.data.data
+      onCommentAdded && onCommentAdded(newComment)
+      setText('')
+    } catch (err) {
+      console.error('Error creating comment:', err)
+    } finally {
+      setLoading(false)
     }
+  }
+
   return (
     <form onSubmit={handleSubmit} className="comment-form">
-  <input
-    type="text"
-    placeholder="Add a comment..."
-    value={text}
-    onChange={(e) => setText(e.target.value)}
-    className="comment-input"
-    disabled={loading}
-  />
-  {text.trim() && (
-    <button
-      type="submit"
-      className={`comment-submit ${loading ? 'disabled' : ''}`}
-      disabled={loading}
-    >
-      Post
-    </button>
-  )}
-</form>
-
+      <input
+        type="text"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Write a comment..."
+        className="comment-input"
+        disabled={loading}
+      />
+      <button type="submit" className="comment-submit" disabled={loading}>
+        {loading ? 'Posting...' : 'Post'}
+      </button>
+    </form>
   )
 }
 

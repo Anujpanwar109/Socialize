@@ -1,9 +1,8 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/layout/Navbar'
 import { useAuth } from '../context/AuthContext'
 import { postApi } from '../services/api'
-
 
 function CreatePostPage() {
   const [text, setText] = useState('')
@@ -18,27 +17,21 @@ function CreatePostPage() {
   const handleFileChange = async (e) => {
     const file = e.target.files[0]
     if (file) {
-      // setSelectedFile(file)
-      // const reader = new FileReader()
-      // reader.onloadend = () => {
-      //   setImagePreview(reader.result)
-      // }
-      // reader.readAsDataURL(file) /
-      
-        try{ 
+      // Preview image before uploading
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result) // set preview (base64 string)
+      }
+      reader.readAsDataURL(file)
+
+      try {
         const uploadResponse = await postApi.uploadFile(file)
-        console.log(uploadResponse)
-        let imageUrl = uploadResponse.data.data.file_url
-
+        const imageUrl = uploadResponse.data.data.file_url
         setSelectedFile(imageUrl)
-
-
-        }
-        catch(err){
-          console.log(err)
-        }
-
-
+      } catch (err) {
+        console.error(err)
+        setError('Image upload failed')
+      }
     }
   }
 
@@ -54,14 +47,6 @@ function CreatePostPage() {
     setError('')
 
     try {
-      // let imageUrl = null
-      // if (selectedFile) {
-      //    console
-      //   const uploadResponse = await postApi.uploadFile(selectedFile)
-      //   imageUrl = uploadResponse.data.url
-      //   console.log("url", imagePreview)
-      // }
-
       const postData = {
         text: text.trim(),
         image: selectedFile
@@ -79,7 +64,7 @@ function CreatePostPage() {
 
   if (!user) {
     navigate('/login')
-    return null 
+    return null
   }
 
   return (
