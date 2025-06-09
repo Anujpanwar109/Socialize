@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Secret
+node_modules/
+
 .env
