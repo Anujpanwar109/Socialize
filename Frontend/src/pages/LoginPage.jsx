@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import Creative from '../components/layout/Creative'
+import Creative from '../components/layout/Creative.jsx'
 
 const LoginPage = () => {
     const[email,setEmail]=useState('')
