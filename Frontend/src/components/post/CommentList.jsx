@@ -30,6 +30,7 @@ function CommentList({ postId, newComment }) {
 
   const handleDelete = async (commentId) => {
     try {
+      
       await commentApi.deleteComment(commentId)
       setComments(prev => prev.filter(comment => comment._id !== commentId))
     } catch (error) {
@@ -41,18 +42,17 @@ function CommentList({ postId, newComment }) {
     return <div className="text-xs text-gray-500 px-4 pb-2">Loading comments...</div>
   }
 
-  if (comments.length === 0) {
-    return null
-  }
+  
 
   return (
     <div className="comment-section">
-      {comments.map(comment => (
+      {comments.length>0?(comments.map(comment => (
+        
         <div key={comment._id} className="comment-row">
           <p className="comment-text">
             <span className="comment-user">{comment.user?.name}</span> {comment.text}
           </p>
-          {comment.user?._id === user?._id && (
+          {comment.user?._id === user?.id && (
             <button
               onClick={() => handleDelete(comment._id)}
               className="comment-delete-button"
@@ -61,7 +61,7 @@ function CommentList({ postId, newComment }) {
             </button>
           )}
         </div>
-      ))}
+      ))):(<div>No Comments</div>)}
     </div>
   )
 }

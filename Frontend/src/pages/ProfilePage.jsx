@@ -21,8 +21,8 @@ function ProfilePage(){
     const isOwnProfile = !userId || userId === user?.id
 
     console.log("userId param:", userId);
-console.log("user from context:", user);
-console.log("targetUserId to fetch:", targetUserId);
+    console.log("user from context:", user);
+    console.log("targetUserId to fetch:", targetUserId);
 
     useEffect(()=>{
         if(!user ){

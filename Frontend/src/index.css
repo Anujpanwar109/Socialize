@@ -466,6 +466,7 @@ p {
 
   .nav-links {
     gap: 12px;
+    display: none;
   }
 
   .navbar-container {
@@ -678,21 +679,21 @@ p {
 .comment-row {
   display: flex;
   justify-content: space-between;
-  padding-top: 0.25rem;  /* py-1 = 0.25rem top and bottom */
+  padding-top: 0.25rem;  
   padding-bottom: 0.25rem;
 }
 
 .comment-text {
-  font-size: 0.875rem; /* text-sm */
+  font-size: 0.875rem; 
 }
 
 .comment-user {
-  font-weight: 500; /* font-medium */
+  font-weight: 500; 
 }
 
 .comment-delete-button {
-  font-size: 0.75rem; /* text-xs */
-  color: #9ca3af; /* text-gray-400 */
+  font-size: 0.75rem; 
+  color: #9ca3af; 
   background: none;
   border: none;
   cursor: pointer;
@@ -700,7 +701,7 @@ p {
 }
 
 .comment-delete-button:hover {
-  color: #4b5563; /* text-gray-600 */
+  color: #4b5563; 
 }
 
 

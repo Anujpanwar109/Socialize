@@ -1,6 +1,5 @@
 
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/layout/Navbar'
 import CommentForm from '../components/post/CommentForm'
 import CommentList from '../components/post/CommentList'
@@ -18,7 +17,7 @@ function HomePage() {
   // try to make comment card
     const [activePostId, setActivePostId] = useState(null)
 
-  const navigate = useNavigate()
+  
 
   useEffect(() => {
     const loadFeed = async () => {
@@ -32,6 +31,7 @@ function HomePage() {
   }, [])
 
   const handleLike = async (post) => {
+    console.log(post)
     const allPeopleWhoLiked = post.likes
     const haveILiked = allPeopleWhoLiked.find(like => like._id === user.id)
     if (haveILiked) {
@@ -126,8 +126,9 @@ function HomePage() {
                 </div>
                 {activePostId === post._id && (
                   <div className='comment-card'>
-                  <div className='comment-card-inner'>
                   <button onClick={() => setActivePostId(null)} className="close-button">❌</button>
+                  <div className='comment-card-inner'>
+                  
                   <CommentList postId={post._id} newComment={newComments[post._id]} />
                   </div>
                 </div>

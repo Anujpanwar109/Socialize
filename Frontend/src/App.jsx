@@ -6,7 +6,7 @@ import SignupPage from './pages/SignupPage'
 import CreatePostPage from './pages/CreatePostPage'
 import ProfilePage from './pages/ProfilePage'
 import ProtectedRoute from './components/common/ProtectedRoute'
-import NotFoundPage from './pages/NotFoundPage'
+
 
 
 const App = () => {

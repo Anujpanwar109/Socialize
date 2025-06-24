@@ -1,9 +1,7 @@
 import { useState } from 'react'
 import { commentApi } from '../../services/api'
-import { useAuth } from '../../context/AuthContext'
 
 function CommentForm({ postId, onCommentAdded }) {
-  const { user } = useAuth()
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
 
