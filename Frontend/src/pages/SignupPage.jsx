@@ -20,7 +20,7 @@ const SignupPage = () => {
         const result=await signup(name,email,password)
 
         if(result.success){
-            navigate('/')
+            navigate('/login')
         }else{
             setError(result.error)
         }

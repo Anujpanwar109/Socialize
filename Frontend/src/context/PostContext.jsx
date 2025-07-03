@@ -26,11 +26,11 @@ export const PostProvider =({children})=>{
         try{
             await postApi.likePost(postId)
             //update local state optimistically
-            setPosts(posts.map(post=>
+            setPosts(posts.map(post=>(
                 post._id===postId
                 ?{...post,likesCount:post.likesCount+1,isLiked:true}:post
 
-            ))
+            )))
         }
         catch(error){
             console.error('Error liking post:',error)

@@ -20,7 +20,7 @@ function CreatePostPage() {
       // Preview image before uploading
       const reader = new FileReader()
       reader.onloadend = () => {
-        setImagePreview(reader.result) // set preview (base64 string)
+        setImagePreview(reader.result) 
       }
       reader.readAsDataURL(file)
 

@@ -73,8 +73,8 @@ const handleDelete = async (postId) => {
     const handleEditProfile=async()=>{
         try{
             const response=await userApi.updateProfile({name:editName})
-            
-            setProfile(response.data)
+            console.log(response)
+            setProfile(response.data.data)
             setIsEditing(false)
         }
         catch(error){

@@ -40,6 +40,8 @@ function HomePage() {
       await likePost(post._id)
     }
   }
+  
+
 
   const handleCommentAdded = (postId, comment) => {
     setNewComments(prev => ({
@@ -121,6 +123,9 @@ function HomePage() {
                   >
                     {post.likes.find(like => like._id === user.id) ? '❤️' : '🤍'} {post.likesCount || 0}
                   </button>
+
+                    
+
                   <button className="comment-button" onClick={() => setActivePostId(post._id)}>💬 Comment</button>
                   <button className="share-button">📤 Share</button>
                 </div>
